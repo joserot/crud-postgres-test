@@ -21,24 +21,23 @@ app.listen(port, () => {
 
 // Obtener todos los productos
 app.get("/products", async (req, res) => {
-	sequelize.sync({ alter: true });
-	await sequelize.sync();
+	await sequelize.sync({ alter: true });
 	const allProducts = await Product.findAll();
 	await res.json(allProducts);
 });
 
 // Obtener un producto
 app.get("/products/:productId", async (req, res) => {
-	const { productId } = req.params;
-	sequelize.sync({ alter: true });
-	const product = await Product.findByPk(productId);
-	await res.json(product);
+	const { productId } = await req.params;
+	await sequelize.sync({ alter: true });
+	const getProduct = await Product.findByPk(productId);
+	await res.json(getProduct);
 });
 
 // Crear un producto
 app.post("/product", async (req, res) => {
-	const { title, price } = req.body;
-	sequelize.sync({ alter: true });
+	const { title, price } = await req.body;
+	await sequelize.sync({ alter: true });
 
 	const newProduct = await Product.create({
 		title,
@@ -52,10 +51,10 @@ app.post("/product", async (req, res) => {
 
 // Modificar un producto
 app.patch("/products/:productId", async (req, res) => {
-	const { productId } = req.params;
-	const { title, price } = req.body;
+	const { productId } = await req.params;
+	const { title, price } = await req.body;
 
-	sequelize.sync({ alter: true });
+	await sequelize.sync({ alter: true });
 
 	await Product.update(
 		{ title, price },
@@ -66,16 +65,16 @@ app.patch("/products/:productId", async (req, res) => {
 		},
 	);
 
-	res.json({
+	await res.json({
 		message: "product updated",
 	});
 });
 
 // Eliminar un producto
 app.delete("/products/:productId", async (req, res) => {
-	const { productId } = req.params;
+	const { productId } = await req.params;
 
-	sequelize.sync({ alter: true });
+	await sequelize.sync({ alter: true });
 
 	await Product.destroy({
 		where: {
@@ -83,7 +82,7 @@ app.delete("/products/:productId", async (req, res) => {
 		},
 	});
 
-	res.json({
+	await res.json({
 		message: "product deleted",
 	});
 });

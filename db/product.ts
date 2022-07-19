@@ -1,12 +1,14 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "./index";
 
-export class Product extends Model {}
+class Product extends Model {}
 
 Product.init(
 	{
-		title: DataTypes.STRING,
-		price: DataTypes.NUMBER,
+		title: DataTypes.STRING(50),
+		price: DataTypes.INTEGER,
 	},
 	{ sequelize, modelName: "product" },
 );
+
+export { Product };
